@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>P2P Books | Home</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">📚 P2P Books</div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sell.html">Sell / Rent</a>
+    <a href="login.html">Login</a>
+  </nav>
+
+  <!-- 🌙 Dark mode toggle -->
+  <div class="toggle">
+    <input type="checkbox" id="darkToggle">
+    <label for="darkToggle">🌙</label>
+  </div>
+</header>
+
+
+<section class="hero">
+  <h1>Find, Sell or Rent Books Easily</h1>
+  <p>A peer-to-peer platform for college students</p>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search by book title..." />
+    <button onclick="searchBooks()">Search</button>
+  </div>
+</section>
+
+<section class="books-section">
+  <h2>Available Books</h2>
+  <div id="bookList" class="book-grid"></div>
+</section>
+
+<footer>
+  © 2025 P2P Books | Designed for College Students
+</footer>
+
+<script>
+const API = "http://localhost:5000/api/books";
+const bookList = document.getElementById("bookList");
+
+async function loadBooks(query = "") {
+  const res = await fetch(`${API}?q=${query}`);
+  const books = await res.json();
+
+  if (books.length === 0) {
+    bookList.innerHTML = "<p class='empty'>No books found.</p>";
+    return;
+  }
+
+  bookList.innerHTML = books.map(book => `
+    <div class="book-card">
+      <img src="${book.image}" />
+      <h3>${book.title}</h3>
+      <p><strong>Author:</strong> ${book.author}</p>
+      <p><strong>Used:</strong> ${book.condition}</p>
+      <p class="price">₹${book.price}</p>
+    </div>
+  `).join("");
+}
+
+function searchBooks() {
+  const q = document.getElementById("searchInput").value;
+  loadBooks(q);
+}
+
+loadBooks();
+</script>
+<script>
+const toggle = document.getElementById("darkToggle");
+if (toggle) {
+  toggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark");
+  });
+}
+</script>
+
+</body>
+</html>

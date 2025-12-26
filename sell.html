@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sell / Rent | P2P Books</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">📚 P2P Books</div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="sell.html">Sell / Rent</a>
+    <a href="login.html">Login</a>
+  </nav>
+
+  <!-- 🌙 Dark mode toggle -->
+  <div class="toggle">
+    <input type="checkbox" id="darkToggle">
+    <label for="darkToggle">🌙</label>
+  </div>
+</header>
+
+
+<section class="form-wrapper">
+  <div class="form-card">
+    <h2>Sell or Rent Your Book</h2>
+
+    <form id="sellForm" enctype="multipart/form-data">
+      <input name="title" placeholder="Book Name" required />
+      <input name="author" placeholder="Author Name" required />
+      <input name="condition" placeholder="How many years used" required />
+      <input name="price" type="number" placeholder="Price (₹)" required />
+      <input type="file" name="image" required />
+      <button type="submit">Upload Book</button>
+    </form>
+
+    <p id="msg"></p>
+  </div>
+</section>
+
+<script>
+document.getElementById("sellForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+
+  const res = await fetch("http://localhost:5000/api/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  document.getElementById("msg").innerText =
+    data.success ? "✅ Book uploaded successfully!" : "❌ Upload failed";
+};
+</script>
+<script>
+const toggle = document.getElementById("darkToggle");
+if (toggle) {
+  toggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark");
+  });
+}
+</script>
+
+</body>
+</html>
+
